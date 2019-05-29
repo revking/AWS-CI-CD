@@ -1,10 +1,15 @@
 version: 0.2
-
 phases:
+  pre_build:
+    commands:
+      - echo Restore started on `date`
+      - pip install --upgrade awscli
+      - dotnet restore TestApplication/TestApplication.csproj
   build:
     commands:
-      - dotnet restore
-      - dotnet build
+      - echo Build started on `date`
+      - dotnet publish -c release -o ./build_output TestApplication/TestApplication.csproj
+      - dotnet vstest TestApplication/bin/TestApplication.dll
 artifacts:
   files:
-    - .\bin\Debug\netcoreapp2.2\*
+    - TestApplication/obj/**/*
